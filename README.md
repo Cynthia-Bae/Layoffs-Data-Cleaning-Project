@@ -1,4 +1,7 @@
-## 🗂️ Project Overview — Layoffs-Data-Cleaning-Project (SQL)
+![Status](https://img.shields.io/badge/status-active-success.svg)
+
+
+##  Project Overview — Layoffs-Data-Cleaning-Project (SQL)
 
 ### 1. Project Summary
 Cleaned and transformed a raw **layoffs dataset** into an analysis-ready table by standardizing company names, normalizing locations, fixing date formats, calculating missing percentages, and structuring the data into staging layers.  
@@ -62,14 +65,7 @@ Delete rows where `row_num > 1`.
 
 #### 🔹 Numeric Conversions
 - Remove non-numeric characters (commas, `%`, `+`)  
-- Cast cleaned values to integer/decimal  
-- Compute missing layoff percentages:  
-  ```sql
-  ROUND(
-      (employees_laid_off::numeric / NULLIF(total_employees::numeric, 0)) * 100,
-      1
-  ) AS percentage_laid_off
-
+- Cast cleaned values to integer/decimal   
 
 🔹 Date Cleaning
 
@@ -95,4 +91,78 @@ Insert cleaned rows into layoffs_stagging2 (final cleaned table)
 
 Add necessary constraints and indexes (company, date, country)
 
+## 🧱 Recommended Data Model (Star Schema)
 
+### 📌 fact_layoffs
+| Column              | Description                           |
+|---------------------|---------------------------------------|
+| layoff_id (PK)      | Unique layoff event                   |
+| company_id (FK)     | Links to `dim_company`                |
+| date_id (FK)        | Links to `dim_date`                   |
+| employees_laid_off  | Number of employees laid off          |
+| total_employees     | Total workforce before layoffs        |
+| percent_laid_off    | Percentage of workforce laid off      |
+| source              | Data source or metadata               |
+
+---
+
+### 📌 dim_company
+| Column          | Description                               |
+|-----------------|-------------------------------------------|
+| company_id (PK) | Unique company identifier                  |
+| company_name    | Cleaned & standardized name                |
+| industry        | Industry classification                    |
+| hq_country      | Company headquarters country               |
+
+---
+
+### 📌 dim_date
+| Column          | Description                               |
+|-----------------|-------------------------------------------|
+| date_id (PK)    | Unique date identifier                     |
+| full_date       | Full date (DATE)                           |
+| year            | Year                                       |
+| quarter         | Quarter                                    |
+| month           | Month                                      |
+| day             | Day                                        |
+| is_approximate  | TRUE/FALSE flag for estimated dates        |
+
+---
+
+### 📌 dim_location
+| Column             | Description                             |
+|--------------------|-----------------------------------------|
+| location_id (PK)   | Unique location identifier               |
+| city               | City name                                |
+| country            | Country name                             |
+| iso_country_code   | Standardized ISO country code            |
+
+---
+
+This star schema supports fast OLAP queries, enriched reporting, and scalable dashboard design.
+
+---
+
+## Suggested Analyses & KPIs
+
+- Total layoffs by year/quarter  
+- Top 10 companies by proportion of workforce laid off  
+- Layoff rate by country  
+- 3-month rolling layoff trend  
+- Distribution of layoff percentages  
+
+---
+
+## Dashboard Concepts
+
+### **Pages**
+- **Overview** — KPIs, time series trend, global map  
+- **Company Insights** — layoffs over time, proportions, comparison charts  
+- **Geography** — country-level choropleth, city tables  
+
+### **Recommended Visuals**
+- Line charts  
+- Bar charts (Top N)  
+- Choropleth map  
+- Histogram  
+- Scatterplots  
