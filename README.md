@@ -1,7 +1,7 @@
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
 
-##  Project Overview — Layoffs-Data-Cleaning-Project (SQL)
+## Project Overview — Layoffs-Data-Cleaning-Project (SQL)
 
 ### 1. Project Summary
 Cleaned and transformed a raw **layoffs dataset** into an analysis-ready table by standardizing company names, normalizing locations, fixing date formats, calculating missing percentages, and structuring the data into staging layers.  
